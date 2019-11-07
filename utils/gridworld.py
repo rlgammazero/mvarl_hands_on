@@ -43,13 +43,14 @@ class GridWorldWithPits(FiniteEnv):
         self.matrix_representation()
         self.lastaction = None
         super(GridWorldWithPits, self).__init__(states=range(self.nb_states), action_sets=self.state_actions, P=self.P, gamma=gamma)
+        self.current_step = 0
 
     def matrix_representation(self):
         if self.P is None:
             nstates = self.nb_states
             nactions = max(map(len, self.state_actions))
             self.P = np.inf * np.ones((nstates, nactions, nstates))
-            self.R = np.inf * np.ones((nstates, nactions))
+            self.R = np.inf * np.ones((nstates, nactions, nstates))
             for s in range(nstates):
                 r, c = self.state2coord[s]
                 for a_idx, action in enumerate(range(len(self.action_names))):
@@ -155,13 +156,14 @@ class GridWorldWithPits(FiniteEnv):
         return desc
 
     def reward_func(self, state, action, next_state):
-        return self.R[state, action]
+        return self.R[state, action, next_state]
 
     def reset(self, s=None):
         if s is None:
             self.state = self.initial_state
         else:
             self.state = s
+        self.current_step = 0
         return self.state
 
     def step(self, action):
@@ -173,13 +175,14 @@ class GridWorldWithPits(FiniteEnv):
         p = self.P[self.state, action_index]
         next_state = np.random.choice(self.nb_states, 1, p=p).item()
 
-        reward = self.R[self.state, action_index]
+        reward = self.R[self.state, action_index, next_state]
         self.state = next_state
 
         self.lastaction = action
 
         r, c = self.state2coord[self.state]
         done = self.grid[r][c] == 'g'
+        self.current_step +=1
 
         return next_state, reward, done, {}
 
