@@ -159,6 +159,7 @@ class GridWorldWithPits(FiniteEnv):
         return self.R[state, action, next_state]
 
     def reset(self, s=None):
+        self.lastaction = None
         if s is None:
             self.state = self.initial_state
         else:
