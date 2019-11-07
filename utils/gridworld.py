@@ -222,5 +222,3 @@ class GridWorldWithPits(FiniteEnv):
             raise ValueError("Action {} cannot be executed in this state {}".format(action, self.state))
         next_state = np.random.choice(self.nb_states, 1, p=p).item()
 
-    def reward_func(self, state, action, next_state):
-        return self.R[state, action]
