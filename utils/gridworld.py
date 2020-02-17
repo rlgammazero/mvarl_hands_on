@@ -50,7 +50,7 @@ class GridWorldWithPits(FiniteEnv):
             nstates = self.nb_states
             nactions = max(map(len, self.state_actions))
             self.P = np.inf * np.ones((nstates, nactions, nstates))
-            self.R = np.inf * np.ones((nstates, nactions, nstates))
+            self.R = np.inf * np.ones((nstates, nactions))
             for s in range(nstates):
                 r, c = self.state2coord[s]
                 for a_idx, action in enumerate(range(len(self.action_names))):
@@ -156,7 +156,7 @@ class GridWorldWithPits(FiniteEnv):
         return desc
 
     def reward_func(self, state, action, next_state):
-        return self.R[state, action, next_state]
+        return self.R[state, action]
 
     def reset(self, s=None):
         self.lastaction = None
@@ -176,7 +176,7 @@ class GridWorldWithPits(FiniteEnv):
         p = self.P[self.state, action_index]
         next_state = np.random.choice(self.nb_states, 1, p=p).item()
 
-        reward = self.R[self.state, action_index, next_state]
+        reward = self.R[self.state, action_index]
         self.state = next_state
 
         self.lastaction = action
