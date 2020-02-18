@@ -210,6 +210,33 @@ class GridWorldWithPits(FiniteEnv):
         else:
             outfile.write("\n")
 
+    def render_policy(self, pol):
+        outfile = sys.stdout
+        out = self.desc.copy().tolist()
+        out = [[c.decode('utf-8') for c in line] for line in out]
+        r, c = self.state2coord[self.state]
+
+        for s in range(self.Ns):
+            r, c = self.state2coord[self.state]
+            action = pol[s]
+            # 'right', 'down', 'left', 'up'
+            if action == 0:
+                out[1 + r][2 * c + 1] = '>'
+            elif action == 1:
+                out[1 + r][2 * c + 1] = 'v'
+            elif action == 2:
+                out[1 + r][2 * c + 1] = '<'
+            elif action == 3:
+                out[1 + r][2 * c + 1] = '^'
+            else:
+                raise ValueError()
+
+        outfile.write("\n".join(["".join(row) for row in out]) + "\n")
+        if self.lastaction is not None:
+            outfile.write("  ({})\n".format(self.action_names[self.lastaction]))
+        else:
+            outfile.write("\n")
+
     def copy(self):
         new_env = GridWorldWithPits(grid=self.grid, txt_map=self.txt_map,
                                     proba_succ=self.proba_succ, uniform_trans_proba=self.uniform_trans_proba)
@@ -221,4 +248,3 @@ class GridWorldWithPits(FiniteEnv):
         except:
             raise ValueError("Action {} cannot be executed in this state {}".format(action, self.state))
         next_state = np.random.choice(self.nb_states, 1, p=p).item()
-
