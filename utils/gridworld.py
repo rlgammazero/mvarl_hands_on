@@ -232,10 +232,6 @@ class GridWorldWithPits(FiniteEnv):
                 raise ValueError()
 
         outfile.write("\n".join(["".join(row) for row in out]) + "\n")
-        if self.lastaction is not None:
-            outfile.write("  ({})\n".format(self.action_names[self.lastaction]))
-        else:
-            outfile.write("\n")
 
     def copy(self):
         new_env = GridWorldWithPits(grid=self.grid, txt_map=self.txt_map,
