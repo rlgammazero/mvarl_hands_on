@@ -217,7 +217,7 @@ class GridWorldWithPits(FiniteEnv):
         r, c = self.state2coord[self.state]
 
         for s in range(self.Ns):
-            r, c = self.state2coord[self.state]
+            r, c = self.state2coord[s]
             action = pol[s]
             # 'right', 'down', 'left', 'up'
             if action == 0:
