@@ -109,7 +109,7 @@ class GridWorldWithPits(FiniteEnv):
 
             minr = np.min(self.R)
             maxr = np.max(self.R[np.isfinite(self.R)])
-            self.R = (self.R - minr) / (maxr - minr)
+            # self.R = (self.R - minr) / (maxr - minr)
 
             self.d0 = np.zeros((nstates,))
             self.d0[self.initial_state] = 1.
