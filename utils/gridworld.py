@@ -177,13 +177,13 @@ class GridWorldWithPits(FiniteEnv):
         next_state = np.random.choice(self.nb_states, 1, p=p).item()
 
         reward = self.R[self.state, action_index]
-        self.state = next_state
 
         self.lastaction = action
 
         r, c = self.state2coord[self.state]
         done = self.grid[r][c] == 'g'
         self.current_step +=1
+        self.state = next_state
 
         return next_state, reward, done, {}
 
