@@ -5,7 +5,7 @@ from gym import utils
 from finite_env import FiniteEnv
 
 class GridWorldWithPits(FiniteEnv):
-    def __init__(self, grid, txt_map, gamma=0.99, proba_succ=0.95, uniform_trans_proba=0.001):
+    def __init__(self, grid, txt_map, gamma=0.99, proba_succ=0.95, uniform_trans_proba=0.001, normalize_reward=False):
         self.desc = np.asarray(txt_map, dtype='c')
         self.grid = grid
         self.txt_map = txt_map
@@ -16,6 +16,7 @@ class GridWorldWithPits(FiniteEnv):
 
         # Create a map to translate coordinates [r,c] to scalar index
         # (i.e., state) and vice-versa
+        self.normalize_reward = normalize_reward
 
 
         self.initial_state = None
@@ -107,9 +108,10 @@ class GridWorldWithPits(FiniteEnv):
                         else:
                             self.R[s, a_idx] = -2
 
-            minr = np.min(self.R)
-            maxr = np.max(self.R[np.isfinite(self.R)])
-            # self.R = (self.R - minr) / (maxr - minr)
+            if self.normalize_reward:
+                minr = np.min(self.R)
+                maxr = np.max(self.R[np.isfinite(self.R)])
+                self.R = (self.R - minr) / (maxr - minr)
 
             self.d0 = np.zeros((nstates,))
             self.d0[self.initial_state] = 1.
